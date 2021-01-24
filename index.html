@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <head>
   <title>Electron Auto Update Example</title>
+  <script src="home.js"></script>
+  <script src="about.js"></script>
   <style>
     body {
       box-sizing: border-box;
@@ -28,6 +30,12 @@
   </style>
 </head>
 <body>
+  <ul class="navbar-list">
+    <li class="navbar-item"><a href="#" onclick="onNavigate('/home'); return false;">Home</a></li>
+    <li class="navbar-item"><a href="#" onclick="onNavigate('/about'); return false;">About</a></li>
+  </ul>
+  <div id="router-content"></div>
+  <script src="router.js"></script>
   <h1>Electron Auto Update Example</h1>
   <p id="version"></p>
   <div id="notification" class="hidden">
