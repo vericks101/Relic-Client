@@ -18,6 +18,17 @@ function createWindow () {
   mainWindow.once('ready-to-show', () => {
     autoUpdater.checkForUpdatesAndNotify();
   });
+
+  // var child = require('child_process').execFile;
+  // var executablePath = "C:\\Program Files (x86)\\Alien Invasion\\Alien Invasion x86.exe";
+  // child(executablePath, function(err, data) {
+  //   if(err){
+  //      console.error(err);
+  //      return;
+  //   }
+ 
+  //   console.log(data.toString());
+  // });
 }
 
 app.on('ready', () => {
