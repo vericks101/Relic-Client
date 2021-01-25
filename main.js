@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
+const { download } = require("electron-dl");
 
 let mainWindow;
 
@@ -54,6 +55,12 @@ ipcMain.on('app_version', (event) => {
 ipcMain.on('restart_app', () => {
     autoUpdater.quitAndInstall();
 });
+
+// ipcMain.on("download", (event, info) => {
+//   info.properties.onProgress = status => mainWindow.webContents.send("download progress", status);
+//   download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
+//       .then(dl => mainWindow.webContents.send("download complete", dl.getSavePath()));
+// });
 
 autoUpdater.on('update-available', () => {
     mainWindow.webContents.send('update_available');

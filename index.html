@@ -57,6 +57,18 @@
       version.innerText = 'Version ' + arg.version;
     });
 
+    // ipcRenderer.send("download", {
+    //   url: "https://download1587.mediafire.com/7dl78tmhbtng/m90ysu0olo9z192/Build.rar",
+    //   properties: {directory: "C:\\Users\\veric\\Desktop"}
+    // });
+    // ipcRenderer.on("download complete", (event, file) => {
+    //   console.log(file);
+    // });
+    // ipcRenderer.on("download progress", (event, progress) => {
+    //   const cleanProgressInPercentages = Math.floor(progress.percent * 100); // Without decimal point
+    //   console.log(cleanProgressInPercentages);
+    // });
+
     const notification = document.getElementById('notification');
     const message = document.getElementById('message');
     const restartButton = document.getElementById('restart-button');
