@@ -1,13 +1,13 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
-const { download } = require("electron-dl");
+// const { download } = require("electron-dl");
 
 let mainWindow;
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1280,
+    height: 800,
     webPreferences: {
       nodeIntegration: true,
     },
@@ -30,6 +30,22 @@ function createWindow () {
  
   //   console.log(data.toString());
   // });
+
+  // var fs = require('fs');
+  // var filepath = "C:\\Users\\veric\\Desktop\\test1.txt";
+
+  // if (fs.existsSync(filepath)) {
+  //     fs.unlink(filepath, (err) => {
+  //         if (err) {
+  //             console.log("An error ocurred updating the file" + err.message);
+  //             console.log(err);
+  //             return;
+  //         }
+  //         console.log("File succesfully deleted");
+  //     });
+  // } else {
+  //     console.log("This file doesn't exist, cannot delete");
+  // }
 }
 
 app.on('ready', () => {
