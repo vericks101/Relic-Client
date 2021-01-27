@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "electron-dl": "^3.0.2",
-    "electron-updater": "^4.3.5"
+    "electron-updater": "^4.3.5",
+    "path": "^0.12.7"
   }
 }

@@ -1,5 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
+var path = require('path');
+const { menu } = require('./menu');
 // const { download } = require("electron-dl");
 
 let mainWindow;
@@ -9,9 +11,13 @@ function createWindow () {
     width: 1280,
     height: 800,
     webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
+      enableRemoteModule: true
     },
+    frame: false
   });
+  // mainWindow.webContents.openDevTools()
   mainWindow.loadFile('index.html');
   mainWindow.on('closed', function () {
     mainWindow = null;
@@ -61,6 +67,17 @@ app.on('window-all-closed', function () {
 app.on('activate', function () {
   if (mainWindow === null) {
     createWindow();
+  }
+});
+
+// Register an event listener. When ipcRenderer sends mouse click co-ordinates, show menu at that position.
+ipcMain.on(`display-app-menu`, function(e, args) {
+  if (mainWindow) {
+    menu.popup({
+      window: mainWindow,
+      x: args.x,
+      y: args.y
+    });
   }
 });
 
