@@ -8,8 +8,8 @@ let mainWindow;
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 1280,
-    height: 800,
+    width: 1200,
+    height: 720,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true,
@@ -17,7 +17,7 @@ function createWindow () {
     },
     frame: false
   });
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
   mainWindow.loadFile('index.html');
   mainWindow.on('closed', function () {
     mainWindow = null;
