@@ -32,7 +32,7 @@
 
     /* The sidebar menu */
     .sidenav {
-      height: 100%; /* Full-height: remove this if you want "auto" height */
+      height: 665px; /* Full-height: remove this if you want "auto" height */
       width: 160px; /* Set the width of the sidebar */
       position: fixed; /* Fixed Sidebar (stay in place on scroll) */
       z-index: 1; /* Stay on top */
@@ -106,6 +106,16 @@
     button i {
       color: white;
     }
+
+    .bottom-bar {
+      background-color: red;
+      bottom: 0;
+      position: absolute;
+      width: 100%;
+      height: 25px;
+      text-align: left;
+      padding-left: 10px;
+    }
   </style>
 </head>
 <body>
@@ -130,10 +140,10 @@
       About
     </a>
   </div>
-  <div style="padding-left: 160px;">
+  <div style="padding: 0px 0px 0px 160px;">
     <div id="router-content"></div>
     <script src="router.js"></script>
-    <p id="version"></p>
+    <!-- <p id="version"></p> -->
     <div id="notification" class="hidden">
       <p id="message"></p>
       <button id="close-button" onClick="closeNotification()">
@@ -144,7 +154,7 @@
       </button>
     </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+  <div class="bottom-bar">foobar</div>
   <script>
     const { ipcRenderer } = require('electron');
     const version = document.getElementById('version');
@@ -226,4 +236,5 @@
       });
     });
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>
