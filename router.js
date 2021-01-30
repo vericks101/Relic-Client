@@ -1,10 +1,10 @@
 const routes = {
-    '/home' : home,
+    '/unbound' : unbound,
     '/about' : about
 };
 
 const rootDiv = document.getElementById('router-content');
-rootDiv.innerHTML = routes['/home'];
+rootDiv.innerHTML = routes['/unbound'];
 
 const onNavigate = (pathname) => {
     window.history.pushState(

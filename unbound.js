@@ -1,9 +1,20 @@
-let home = `
+let unbound = `
 <style>
+    body {
+        background-image: url("./assets/UnboundBackground.PNG");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+        height: 720px;
+        text-align: center;
+        box-shadow: inset 0 0 0 1000px rgba(0,0,0,.3);
+    }
+
     .header {
         text-align: center;
         margin-top: 20px;
-        background: #1abc9c;
+        background: #0000004a;
         color: white;
     }
 
@@ -24,7 +35,6 @@ let home = `
     .header-section p {
         margin: 0px;
         font-size: 25px;
-        font-weight: bold;
     }
 
     .about-section {
@@ -32,10 +42,11 @@ let home = `
         width: 550px;
         float: right;
         padding: 15px 15px 0px 0px;
+        color: white;
     }
 
     .about-content-section {
-        background-color: red;
+        background-color: #0000008c;
     }
 
     .period-separator {
@@ -44,6 +55,7 @@ let home = `
 
     .about-content-section p {
         padding: 5px 5px 5px 5px;
+        color: white;
     }
 
     .game-manage-buttons {
@@ -54,20 +66,20 @@ let home = `
 </style>
 <div class="header">
     <div class="image-section">
-        <img alt="" src="https://cdn.logo.com/hotlink-ok/logo-social-sq.png" width="40" height="40">
+        <img alt="" src="./assets/UnboundIcon.png" width="40" height="40">
         
         <div class="header-section">
-            <p>Ekodex</p>
-            <span class="badge bg-secondary">2D</span>
-            <span class="badge bg-secondary">RPG</span>
-            <span class="badge bg-secondary">Sandbox</span>
-            <span class="badge bg-secondary">Single Player</span>
+            <p>Unbound</p>
+            <span class="badge bg-dark">2D</span>
+            <span class="badge bg-dark">RPG</span>
+            <span class="badge bg-dark">Sandbox</span>
+            <span class="badge bg-dark">Single Player</span>
         </div>
     </div>
 </div>
 <div class="about-section">
-    <h3>About Ekodex</h3>
-    <img style="padding-bottom: 4px;" data-bs-toggle="tooltip" data-bs-placement="right" title="Tooltip on right" alt="" src="https://cdn.logo.com/hotlink-ok/logo-social-sq.png" width="20" height="20">
+    <h3>About Unbound</h3>
+    <img style="padding-bottom: 4px;" data-bs-toggle="tooltip" data-bs-placement="right" title="Windows" alt="" src="./assets/windowslogo.png" width="21" height="21">
     <span class="period-separator">.</span>
     <span>Version 1.0.0</span>
     <span class="period-separator">.</span>
