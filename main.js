@@ -17,6 +17,7 @@ function createWindow () {
     },
     frame: false
   });
+  mainWindow.setResizable(false);
   mainWindow.webContents.openDevTools()
   mainWindow.loadFile('index.html');
   mainWindow.on('closed', function () {

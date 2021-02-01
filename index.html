@@ -186,7 +186,6 @@
     </div>
     <div class="right">
       <button class="menubar-btn" id="minimize-btn"><i class="fas fa-window-minimize"></i></button>
-      <button class="menubar-btn" id="max-unmax-btn"><i class="far fa-square"></i></button>
       <button class="menubar-btn" id="close-btn"><i class="fas fa-times"></i></button>
     </div>
   </div>
@@ -194,10 +193,6 @@
     <button class="tab-links" onclick="openTab(event, 'Unbound')" id="defaultOpen">
       <img alt="" src="./assets/UnboundIcon.png" width="20" height="20">
       Unbound
-    </button>
-    <button class="tab-links" onclick="openTab(event, 'Foobar')" id="defaultOpen">
-      <img alt="" src="./assets/UnboundIcon.png" width="20" height="20">
-      Foobar
     </button>
   </div>
   
@@ -301,106 +296,6 @@
   </div>
   </div>
 
-  <div id="Foobar" class="tab-content">
-    <style>
-      body {
-          background-image: url("./assets/UnboundBackground.PNG");
-          background-position: center;
-          background-repeat: no-repeat;
-          background-size: cover;
-          position: relative;
-          height: 720px;
-          text-align: center;
-          box-shadow: inset 0 0 0 1000px rgba(0,0,0,.3);
-      }
-  
-      .header {
-          text-align: center;
-          margin-top: 20px;
-          background: #0000004a;
-          color: white;
-      }
-  
-      .image-section {
-          display: flex;
-          padding-left: 25px;
-      }
-  
-      .image-section img {
-          margin-top: 23px;
-      }
-  
-      .header-section {
-          text-align: left;
-          padding: 10px 0px 10px 10px;
-      }
-  
-      .header-section p {
-          margin: 0px;
-          font-size: 25px;
-      }
-  
-      .about-section {
-          text-align: left;
-          width: 550px;
-          float: right;
-          padding: 15px 15px 0px 0px;
-          color: white;
-      }
-  
-      .about-content-section {
-          background-color: #0000008c;
-      }
-  
-      .period-separator {
-          color: white;
-      }
-  
-      .about-content-section p {
-          padding: 5px 5px 5px 5px;
-          color: white;
-      }
-  
-      .game-manage-buttons {
-          right: 15px;
-          bottom: 40px;
-          position: absolute;
-      }
-    </style>
-    <div class="header">
-        <div class="image-section">
-            <img alt="" src="./assets/UnboundIcon.png" width="40" height="40">
-            
-            <div class="header-section">
-                <p>Foobar</p>
-                <span class="badge bg-dark">2D</span>
-                <span class="badge bg-dark">RPG</span>
-                <span class="badge bg-dark">Sandbox</span>
-                <span class="badge bg-dark">Single Player</span>
-            </div>
-        </div>
-    </div>
-    <div class="about-section">
-        <h3>About Foobar</h3>
-        <img style="padding-bottom: 4px;" data-bs-toggle="tooltip" data-bs-placement="right" title="Windows" alt="" src="./assets/windowslogo.png" width="21" height="21">
-        <span class="period-separator">.</span>
-        <span>Version 1.0.0</span>
-        <span class="period-separator">.</span>
-        <span>Released Dec. 26th 2017</span>
-        <div class="about-content-section">
-            <p>
-                The very solar system is at your fingertips as you fight for the survival of the human race, for fortune, and for glory. 
-                Delve deep into the unique planets throughout the solar system and fight various races of aliens and other menacing foes. 
-                Blending the elements of classic action RPG games with the freedom of randomly generated sandbox-style creativity, 
-                Unbound is a unique gaming experience where both the journey and the destination are as unique as the player experience.
-            </p>
-        </div>
-    </div>
-  <div class="game-manage-buttons">
-      <button type="button" class="btn btn-outline-light">Download</button>
-  </div>
-  </div>
-
   <div class="bottom-bar">
     <span>Logged in as <b>Foobar</b> <button type="button" class="btn btn-outline-light">Logout</button> <span class="version" id="version"></span></span>
   </div> 
@@ -472,7 +367,6 @@
     window.addEventListener("DOMContentLoaded", () => {
       const menuButton = document.getElementById("menu-btn");
       const minimizeButton = document.getElementById("minimize-btn");
-      const maxUnmaxButton = document.getElementById("max-unmax-btn");
       const closeButton = document.getElementById("close-btn");
 
       menuButton.addEventListener("click", e => {
@@ -481,20 +375,6 @@
 
       minimizeButton.addEventListener("click", e => {
         window.minimizeWindow();
-      });
-
-      maxUnmaxButton.addEventListener("click", e => {
-        const icon = maxUnmaxButton.querySelector("i.far");
-
-        window.maxUnmaxWindow();
-
-        if (window.isWindowMaximized()) {
-          icon.classList.remove("fa-square");
-          icon.classList.add("fa-clone");
-        } else {
-          icon.classList.add("fa-square");
-          icon.classList.remove("fa-clone");
-        }
       });
 
       closeButton.addEventListener("click", e => {

@@ -27,14 +27,6 @@ function unmaximizeWindow(browserWindow = getCurrentWindow()) {
   browserWindow.unmaximize();
 }
 
-function maxUnmaxWindow(browserWindow = getCurrentWindow()) {
-  if (browserWindow.isMaximized()) {
-    browserWindow.unmaximize();
-  } else {
-    browserWindow.maximize();
-  }
-}
-
 function closeWindow(browserWindow = getCurrentWindow()) {
   browserWindow.close();
 }
@@ -49,7 +41,6 @@ module.exports = {
   minimizeWindow,
   maximizeWindow,
   unmaximizeWindow,
-  maxUnmaxWindow,
   isWindowMaximized,
   closeWindow,
 };
