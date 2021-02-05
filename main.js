@@ -79,12 +79,15 @@ ipcMain.on('delete_game', (event) => {
           if (err) {
               console.log("An error ocurred updating the folder" + err.message);
               console.log(err);
+              event.sender.send('game_deleted_error');
               return;
           }
           console.log("Folder succesfully deleted");
+          event.sender.send('game_deleted');
       });
   } else {
       console.log("This folder doesn't exist, cannot delete");
+      event.sender.send('game_deleted_error');
   }
 });
 
