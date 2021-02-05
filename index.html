@@ -16,6 +16,7 @@
     }
 
     body {
+      background-image: url("./assets/UnboundBackground.PNG");
       box-sizing: border-box;
       padding: 0;
       margin: 0;
@@ -172,7 +173,6 @@
       animation: fadeEffect 0.4s;
     }
 
-    /* Go from zero to full opacity */
     @keyframes fadeEffect {
       from {opacity: 0;}
       to {opacity: 1;}
@@ -189,6 +189,7 @@
       <button class="menubar-btn" id="close-btn"><i class="fas fa-times"></i></button>
     </div>
   </div>
+
   <div class="tab">
     <button class="tab-links" onclick="openTab(event, 'Unbound')" id="defaultOpen">
       <img alt="" src="./assets/UnboundIcon.png" width="20" height="20">
@@ -199,7 +200,6 @@
   <div id="Unbound" class="tab-content">
     <style>
       body {
-          background-image: url("./assets/UnboundBackground.PNG");
           background-position: center;
           background-repeat: no-repeat;
           background-size: cover;
@@ -256,10 +256,25 @@
           color: white;
       }
   
-      .game-manage-buttons {
+      .download-manage-buttons {
           right: 15px;
           bottom: 40px;
           position: absolute;
+      }
+
+      .downloaded-manage-buttons {
+          right: 15px;
+          bottom: 40px;
+          position: absolute;
+          visibility: hidden;
+      }
+
+      .progress-section {
+        width: 400px;
+        right: 15px;
+        bottom: 70px;
+        position: absolute;
+        visibility: hidden;
       }
     </style>
     <div class="header">
@@ -291,9 +306,84 @@
             </p>
         </div>
     </div>
-  <div class="game-manage-buttons">
-      <button type="button" class="btn btn-outline-light">Download</button>
-  </div>
+    <div id="progress-section" class="progress-section">
+      <div class="progress">
+        <div id="progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100">0%</div>
+      </div>
+    </div>
+    <div class="download-manage-buttons">
+        <button id="download-button" style="visibility: hidden;" type="button" onclick="downloadGame()" class="btn btn-outline-light">Download</button>
+    </div>
+    <div id="downloaded-manage-buttons" class="downloaded-manage-buttons">
+      <button id="delete-button" type="button" onclick="deleteGame()" class="btn btn-outline-light">Delete</button>
+      <button id="launch-button" type="button" onclick="launchGame()" class="btn btn-outline-light">Launch</button>
+    </div>
+    
+    <script>
+      const { ipcRenderer } = require('electron');
+
+      const downloadButton = document.getElementById("download-button");
+      const downloadedManageButtons = document.getElementById("downloaded-manage-buttons");
+      ipcRenderer.send('initialize_game_manage_buttons');
+      ipcRenderer.on('initialize_game_manage_buttons', (event, arg) => {
+        ipcRenderer.removeAllListeners('initialize_game_manage_buttons');
+        if (arg.exists) {
+          downloadButton.style.visibility = "hidden";
+          downloadedManageButtons.style.visibility = "visible";
+        } else {
+          downloadButton.style.visibility = "visible";
+          downloadedManageButtons.style.visibility = "hidden";
+        }
+      });
+
+      function deleteGame() {
+        ipcRenderer.send("delete_game");
+        downloadedManageButtons.style.visibility = "hidden";
+        downloadButton.style.visibility = "visible";
+      }
+
+      function launchGame() {
+        ipcRenderer.send("launch_game");
+      }
+
+      const progressSection = document.getElementById("progress-section");
+      function downloadGame() {
+        progressSection.style.visibility = "visible";
+        downloadButton.innerText = "Downloading...";
+        downloadButton.disabled = true;
+
+        ipcRenderer.send("download", {
+          url: "https://download1581.mediafire.com/hpvnu3cfkctg/zszyu5d6tlz668s/Build.zip",
+          properties: {directory: "C:\\Users\\veric\\Desktop"}
+        });
+      }
+      ipcRenderer.on("download progress", (event, progress) => {
+        const cleanProgressInPercentages = Math.floor(progress.percent * 100);
+
+        var progressElement = document.getElementById("progress-bar");
+        progressElement.style.width = cleanProgressInPercentages + "%";
+        progressElement.innerText = cleanProgressInPercentages + "%";
+      });
+      ipcRenderer.on("download complete", (event, file) => {
+        downloadButton.innerText = "Extracting...";
+
+        ipcRenderer.send("decompress-files");
+      });
+
+      ipcRenderer.on("extracting-progress", (event, progress) => {
+        var progressElement = document.getElementById("progress-bar");
+        progressElement.style.width = progress.currentProgress + "%";
+        progressElement.innerText = progress.currentProgress + "%";
+      });
+
+      ipcRenderer.on("extracting-finished", (event) => {
+        progressSection.style.visibility = "hidden";
+        downloadButton.style.visibility = "hidden";
+        downloadedManageButtons.style.visibility = "visible";
+        downloadButton.innerText = "Download";
+        downloadButton.disabled = false;
+      });
+    </script>
   </div>
 
   <div class="bottom-bar">
@@ -319,26 +409,12 @@
 
     document.getElementById("defaultOpen").click();
 
-    const { ipcRenderer } = require('electron');
     const version = document.getElementById('version');
-    
     ipcRenderer.send('app_version');
     ipcRenderer.on('app_version', (event, arg) => {
       ipcRenderer.removeAllListeners('app_version');
       version.innerText = 'Version ' + arg.version;
     });
-
-    // ipcRenderer.send("download", {
-    //   url: "https://download1587.mediafire.com/7dl78tmhbtng/m90ysu0olo9z192/Build.rar",
-    //   properties: {directory: "C:\\Users\\veric\\Desktop"}
-    // });
-    // ipcRenderer.on("download complete", (event, file) => {
-    //   console.log(file);
-    // });
-    // ipcRenderer.on("download progress", (event, progress) => {
-    //   const cleanProgressInPercentages = Math.floor(progress.percent * 100); // Without decimal point
-    //   console.log(cleanProgressInPercentages);
-    // });
 
     const notification = document.getElementById('notification');
     const message = document.getElementById('message');
