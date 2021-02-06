@@ -320,7 +320,7 @@
     </div>
     
     <script>
-      const { ipcRenderer } = require('electron');
+      const { remote, ipcRenderer } = require('electron');
 
       const downloadButton = document.getElementById("download-button");
       const downloadedManageButtons = document.getElementById("downloaded-manage-buttons");
@@ -352,25 +352,26 @@
       }
 
       const progressSection = document.getElementById("progress-section");
+      var progressElement = document.getElementById("progress-bar");
       function downloadGame() {
         progressSection.style.visibility = "visible";
         downloadButton.innerText = "Downloading...";
         downloadButton.disabled = true;
 
         ipcRenderer.send("download", {
-          url: "https://download1581.mediafire.com/hpvnu3cfkctg/zszyu5d6tlz668s/Build.zip",
-          properties: {directory: "C:\\Users\\veric\\Desktop"}
+          url: "https://www.googleapis.com/drive/v3/files/1d4JRuWS5d7R5P_RhJ5-axVDcdr_vd8fQ?alt=media&key=AIzaSyDgwFdwLoyaAWIIFCrTdLhEyi5wH3BEXc8",
+          properties: {directory: `${remote.app.getPath('userData')}`}
         });
       }
       ipcRenderer.on("download progress", (event, progress) => {
         const cleanProgressInPercentages = Math.floor(progress.percent * 100);
 
-        var progressElement = document.getElementById("progress-bar");
         progressElement.style.width = cleanProgressInPercentages + "%";
         progressElement.innerText = cleanProgressInPercentages + "%";
       });
       ipcRenderer.on("download complete", (event, file) => {
         downloadButton.innerText = "Extracting...";
+        progressElement.style.width = "0%";
 
         ipcRenderer.send("decompress-files");
       });
@@ -384,6 +385,7 @@
       ipcRenderer.on("extracting-finished", (event) => {
         progressSection.style.visibility = "hidden";
         downloadButton.style.visibility = "hidden";
+        progressElement.style.width = "0%";
         downloadedManageButtons.style.visibility = "visible";
         downloadButton.innerText = "Download";
         downloadButton.disabled = false;

@@ -61,7 +61,7 @@ ipcMain.on('app_version', (event) => {
 
 ipcMain.on('initialize_game_manage_buttons', (event) => {
   var fs = require('fs');
-  var filepath = "C:\\Users\\veric\\Desktop\\test\\Build\\";
+  var filepath = `${app.getPath('userData')}\\Unbound`;
 
   if (fs.existsSync(filepath)) {
     event.sender.send('initialize_game_manage_buttons', { exists: true });
@@ -72,7 +72,7 @@ ipcMain.on('initialize_game_manage_buttons', (event) => {
 
 ipcMain.on('delete_game', (event) => {
   var fs = require('fs');
-  var filepath = "C:\\Users\\veric\\Desktop\\test\\Build\\";
+  var filepath = `${app.getPath('userData')}\\Unbound`;
 
   if (fs.existsSync(filepath)) {
       fs.rmdir(filepath, { recursive: true }, (err) => {
@@ -93,7 +93,7 @@ ipcMain.on('delete_game', (event) => {
 
 ipcMain.on('launch_game', (event) => {
   var child = require('child_process').execFile;
-  var executablePath = "C:\\Users\\veric\\Desktop\\test\\Build\\Unbound.exe";
+  var executablePath = `${app.getPath('userData')}\\Unbound\\Unbound.exe`;
   child(executablePath, function(err, data) {
     if(err){
        console.error(err);
@@ -116,8 +116,8 @@ ipcMain.on("download", (event, info) => {
 
 ipcMain.on('decompress-files', (event) => {
   var DecompressZip = require('decompress-zip');
-  var ZIP_FILE_PATH = "C:\\Users\\veric\\Desktop\\Build.zip";
-  var DESTINATION_PATH = "C:\\Users\\veric\\Desktop\\test";
+  var ZIP_FILE_PATH = `${app.getPath('userData')}\\1d4JRuWS5d7R5P_RhJ5-axVDcdr_vd8fQ.zip`;
+  var DESTINATION_PATH = `${app.getPath('userData')}`;
   var unzipper = new DecompressZip(ZIP_FILE_PATH);
 
   unzipper.on('error', function (err) {
@@ -128,7 +128,7 @@ ipcMain.on('decompress-files', (event) => {
     console.log('Finished extracting', log);
 
     var fs = require('fs');
-    var filepath = "C:\\Users\\veric\\Desktop\\Build.zip";
+    var filepath = `${app.getPath('userData')}\\1d4JRuWS5d7R5P_RhJ5-axVDcdr_vd8fQ.zip`;
 
     if (fs.existsSync(filepath)) {
         fs.unlink(filepath, (err) => {
