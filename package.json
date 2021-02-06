@@ -1,6 +1,6 @@
 {
   "name": "ekodex-client",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "",
   "main": "main.js",
   "repository": {
@@ -22,6 +22,7 @@
   "dependencies": {
     "decompress-zip": "^0.3.3",
     "electron-dl": "^3.0.2",
+    "electron-log": "^4.3.1",
     "electron-updater": "^4.3.5",
     "path": "^0.12.7"
   }
