@@ -16,7 +16,7 @@
     }
 
     body {
-      background-image: url("./assets/UnboundBackground.PNG");
+      /* background-image: url("./assets/UnboundBackground.PNG"); */
       box-sizing: border-box;
       padding: 0;
       margin: 0;
@@ -292,7 +292,7 @@
     </div>
     <div class="about-section">
         <h3>About Unbound</h3>
-        <img style="padding-bottom: 4px;" data-bs-toggle="tooltip" data-bs-placement="right" title="Windows" alt="" src="./assets/windowslogo.png" width="21" height="21">
+        <img style="padding-bottom: 4px;" data-bs-toggle="tooltip" data-bs-placement="right" title="Windows" alt="" src="./assets/WindowsLogo.png" width="21" height="21">
         <span class="period-separator">.</span>
         <span>Version 1.0.0</span>
         <span class="period-separator">.</span>
@@ -320,7 +320,7 @@
     </div>
     
     <script>
-      const { remote, ipcRenderer } = require('electron');
+      const { ipcRenderer } = require('electron');
 
       const downloadButton = document.getElementById("download-button");
       const downloadedManageButtons = document.getElementById("downloaded-manage-buttons");
@@ -415,6 +415,8 @@
     }
 
     document.getElementById("defaultOpen").click();
+
+    document.body.style.backgroundImage = "url(./assets/UnboundBackground.png)";
 
     const version = document.getElementById('version');
     ipcRenderer.send('app_version');
