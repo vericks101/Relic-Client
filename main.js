@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 var path = require('path');
-const { menu } = require('./menu');
+const { menu } = require('./src/menu/menu');
 const { download } = require("electron-dl");
 
 let mainWindow;
@@ -11,7 +11,7 @@ function createWindow () {
     width: 1200,
     height: 720,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      preload: path.join(__dirname, "./src/menu/menu-preload.js"),
       nodeIntegration: true,
       enableRemoteModule: true
     },
@@ -131,7 +131,7 @@ ipcMain.on('decompress-files', (event) => {
 
   unzipper.on('error', function (err) {
     console.log('Caught an error', err);
-    event.sender.send('decompress-error');
+    event.sender.send('extracting-error');
   });
 
   unzipper.on('extract', function (log) {
@@ -145,14 +145,14 @@ ipcMain.on('decompress-files', (event) => {
             if (err) {
                 console.log("An error ocurred updating the file" + err.message);
                 console.log(err);
-                event.sender.send('decompress-error');
+                event.sender.send('extracting-error');
                 return;
             }
             console.log("File succesfully deleted");
         });
     } else {
         console.log("This file doesn't exist, cannot delete");
-        event.sender.send('decompress-error');
+        event.sender.send('extracting-error');
     }
 
     event.sender.send('extracting-finished');

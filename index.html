@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <head>
-  <title>Electron Auto Update Example</title>
-  <script src="unbound.js"></script>
-  <script src="about.js"></script>
+  <title>Ekodex Client</title>
+  <script> const { remote, ipcRenderer } = require('electron'); </script>
+  <!-- <script src="./pages/unbound.js"></script>
+  <script src="./pages/about.js"></script> -->
   <script src="https://kit.fontawesome.com/1c9144b004.js" crossorigin="anonymous"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
   <style>
@@ -236,7 +237,7 @@
       Unbound
     </button>
   </div>
-  
+
   <div id="Unbound" class="tab-content">
     <style>
       body {
@@ -248,33 +249,33 @@
           text-align: center;
           box-shadow: inset 0 0 0 1000px rgba(0,0,0,.3);
       }
-  
+
       .header {
           text-align: center;
           margin-top: 20px;
           background: #0000004a;
           color: white;
       }
-  
+
       .image-section {
           display: flex;
           padding-left: 25px;
       }
-  
+
       .image-section img {
           margin-top: 23px;
       }
-  
+
       .header-section {
           text-align: left;
           padding: 10px 0px 10px 10px;
       }
-  
+
       .header-section p {
           margin: 0px;
           font-size: 25px;
       }
-  
+
       .about-section {
           text-align: left;
           width: 550px;
@@ -282,20 +283,20 @@
           padding: 15px 15px 0px 0px;
           color: white;
       }
-  
+
       .about-content-section {
           background-color: #0000008c;
       }
-  
+
       .period-separator {
           color: white;
       }
-  
+
       .about-content-section p {
           padding: 5px 5px 5px 5px;
           color: white;
       }
-  
+
       .download-manage-buttons {
           right: 15px;
           bottom: 40px;
@@ -320,7 +321,7 @@
     <div class="header">
         <div class="image-section">
             <img alt="" src="./assets/UnboundIcon.png" width="40" height="40">
-            
+
             <div class="header-section">
                 <p>Unbound</p>
                 <span class="badge bg-dark">2D</span>
@@ -339,9 +340,9 @@
         <span>Released Dec. 26th 2017</span>
         <div class="about-content-section">
             <p>
-                The very solar system is at your fingertips as you fight for the survival of the human race, for fortune, and for glory. 
-                Delve deep into the unique planets throughout the solar system and fight various races of aliens and other menacing foes. 
-                Blending the elements of classic action RPG games with the freedom of randomly generated sandbox-style creativity, 
+                The very solar system is at your fingertips as you fight for the survival of the human race, for fortune, and for glory.
+                Delve deep into the unique planets throughout the solar system and fight various races of aliens and other menacing foes.
+                Blending the elements of classic action RPG games with the freedom of randomly generated sandbox-style creativity,
                 Unbound is a unique gaming experience where both the journey and the destination are as unique as the player experience.
             </p>
         </div>
@@ -358,95 +359,6 @@
       <button id="delete-button" type="button" onclick="deleteGame()" class="btn btn-outline-light">Delete</button>
       <button id="launch-button" type="button" onclick="launchGame()" class="btn btn-outline-light">Launch</button>
     </div>
-    
-    <script>
-      const { remote, ipcRenderer } = require('electron');
-
-      const downloadButton = document.getElementById("download-button");
-      const downloadedManageButtons = document.getElementById("downloaded-manage-buttons");
-      ipcRenderer.send('initialize_game_manage_buttons');
-      ipcRenderer.on('initialize_game_manage_buttons', (event, arg) => {
-        ipcRenderer.removeAllListeners('initialize_game_manage_buttons');
-        if (arg.exists) {
-          downloadButton.style.visibility = "hidden";
-          downloadedManageButtons.style.visibility = "visible";
-        } else {
-          downloadButton.style.visibility = "visible";
-          downloadedManageButtons.style.visibility = "hidden";
-        }
-      });
-
-      function deleteGame() {
-        ipcRenderer.send("delete_game");
-      }
-      ipcRenderer.on("game_deleted", (event) => {
-        downloadedManageButtons.style.visibility = "hidden";
-        downloadButton.style.visibility = "visible";
-      });
-      ipcRenderer.on("game_deleted_error", (event) => {
-        showErrorSnackbar('Error occurred while removing game...');
-      });
-
-      function launchGame() {
-        ipcRenderer.send("launch_game");
-      }
-      ipcRenderer.on("launch_game_error", (event) => {
-        showErrorSnackbar('Error occurred while launching game...');
-      });
-
-      const progressSection = document.getElementById("progress-section");
-      var progressElement = document.getElementById("progress-bar");
-      function downloadGame() {
-        progressSection.style.visibility = "visible";
-        downloadButton.innerText = "Downloading...";
-        downloadButton.disabled = true;
-
-        ipcRenderer.send("download", {
-          url: "https://www.googleapis.com/drive/v3/files/1d4JRuWS5d7R5P_RhJ5-axVDcdr_vd8fQ?alt=media&key=AIzaSyDgwFdwLoyaAWIIFCrTdLhEyi5wH3BEXc8",
-          properties: {directory: `${remote.app.getPath('userData')}`}
-        });
-      }
-      ipcRenderer.on("download progress", (event, progress) => {
-        const cleanProgressInPercentages = Math.floor(progress.percent * 100);
-
-        progressElement.style.width = cleanProgressInPercentages + "%";
-        progressElement.innerText = cleanProgressInPercentages + "%";
-      });
-      ipcRenderer.on("download complete", (event, file) => {
-        downloadButton.innerText = "Extracting...";
-        progressElement.style.width = "0%";
-
-        ipcRenderer.send("decompress-files");
-      });
-      ipcRenderer.on("download-error", (event) => {
-        showErrorSnackbar('Error occurred while downloading game...');
-
-        progressSection.style.visibility = "hidden";
-        downloadButton.innerText = "Download";
-        downloadButton.disabled = false;
-      });
-
-      ipcRenderer.on("extracting-progress", (event, progress) => {
-        var progressElement = document.getElementById("progress-bar");
-        progressElement.style.width = progress.currentProgress + "%";
-        progressElement.innerText = progress.currentProgress + "%";
-      });
-      ipcRenderer.on("extracting-finished", (event) => {
-        progressSection.style.visibility = "hidden";
-        downloadButton.style.visibility = "hidden";
-        progressElement.style.width = "0%";
-        downloadedManageButtons.style.visibility = "visible";
-        downloadButton.innerText = "Download";
-        downloadButton.disabled = false;
-      });
-      ipcRenderer.on("decompress-error", (event) => {
-        showErrorSnackbar('Error occurred while extracting game...');
-
-        progressSection.style.visibility = "hidden";
-        downloadButton.innerText = "Download";
-        downloadButton.disabled = false;
-      });
-    </script>
   </div>
 
   <div id="error-snackbar"></div>
@@ -457,13 +369,12 @@
 
   <script>
     function showErrorSnackbar(text) {
-      var snackbar = document.getElementById("error-snackbar");
+      var errorSnackbar = document.getElementById("error-snackbar");
 
-      snackbar.className = "show";
+      errorSnackbar.className = "show";
+      errorSnackbar.innerText = text;
 
-      snackbar.innerText = text;
-
-      setTimeout(function(){ snackbar.className = snackbar.className.replace("show", ""); }, 3000);
+      setTimeout(function(){ errorSnackbar.className = errorSnackbar.className.replace("show", ""); }, 3000);
     }
 
     function openTab(evt, tabName) {
@@ -496,20 +407,6 @@
 
     const notification = document.getElementById('notification');
     const message = document.getElementById('message');
-    const restartButton = document.getElementById('restart-button');
-
-    ipcRenderer.on('update_available', () => {
-        ipcRenderer.removeAllListeners('update_available');
-        message.innerText = 'A new update is available. Downloading now...';
-        notification.classList.remove('hidden');
-    });
-
-    ipcRenderer.on('update_downloaded', () => {
-        ipcRenderer.removeAllListeners('update_downloaded');
-        message.innerText = 'Update Downloaded. It will be installed on restart. Restart now?';
-        restartButton.classList.remove('hidden');
-        notification.classList.remove('hidden');
-    });
 
     function closeNotification() {
         notification.classList.add('hidden');
@@ -536,5 +433,15 @@
       });
     });
   </script>
+
+  <script src="./src/client_updater/client-updater.js"></script>
+
+  <script src="./src/initialize_game_manage_buttons/initialize-game-manage-buttons.js"></script>
+
+  <script src="./src/game/download-game.js"></script>
+  <script src="./src/game/extract-game.js"></script>
+  <script src="./src/game/launch-game.js"></script>
+  <script src="./src/game/delete-game.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 </body>

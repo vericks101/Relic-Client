@@ -1,7 +1,7 @@
 {
   "name": "ekodex-client",
-  "version": "0.1.11",
-  "description": "",
+  "version": "0.1.12",
+  "description": "Ekodex Client",
   "main": "main.js",
   "repository": {
     "type": "git",
@@ -13,8 +13,8 @@
     "build": "electron-builder build --win --publish never",
     "deploy": "electron-builder build --win --publish always"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Victor Erickson",
+  "license": "MIT",
   "devDependencies": {
     "electron": "^11.2.1",
     "electron-builder": "^22.9.1"
