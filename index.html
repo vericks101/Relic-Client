@@ -16,7 +16,6 @@
     }
 
     body {
-      /* background-image: url("./assets/UnboundBackground.PNG"); */
       box-sizing: border-box;
       padding: 0;
       margin: 0;
@@ -177,6 +176,47 @@
       from {opacity: 0;}
       to {opacity: 1;}
     }
+
+    #error-snackbar {
+      visibility: hidden;
+      min-width: 250px;
+      margin-left: -125px;
+      background-color: #1d1d1dd9;
+      color: rgb(255, 0, 0);
+      text-align: center;
+      border-radius: 2px;
+      padding: 16px;
+      position: fixed;
+      z-index: 1;
+      left: 50%;
+      bottom: 30px;
+    }
+
+    #error-snackbar.show {
+      visibility: visible;
+      -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+
+    @-webkit-keyframes fadein {
+      from {bottom: 0; opacity: 0;}
+      to {bottom: 30px; opacity: 1;}
+    }
+
+    @keyframes fadein {
+      from {bottom: 0; opacity: 0;}
+      to {bottom: 30px; opacity: 1;}
+    }
+
+    @-webkit-keyframes fadeout {
+      from {bottom: 30px; opacity: 1;}
+      to {bottom: 0; opacity: 0;}
+    }
+
+    @keyframes fadeout {
+      from {bottom: 30px; opacity: 1;}
+      to {bottom: 0; opacity: 0;}
+    }
   </style>
 </head>
 <body>
@@ -320,7 +360,7 @@
     </div>
     
     <script>
-      const { ipcRenderer } = require('electron');
+      const { remote, ipcRenderer } = require('electron');
 
       const downloadButton = document.getElementById("download-button");
       const downloadedManageButtons = document.getElementById("downloaded-manage-buttons");
@@ -344,12 +384,15 @@
         downloadButton.style.visibility = "visible";
       });
       ipcRenderer.on("game_deleted_error", (event) => {
-        console.log('error deleting game...');
+        showErrorSnackbar('Error occurred while removing game...');
       });
 
       function launchGame() {
         ipcRenderer.send("launch_game");
       }
+      ipcRenderer.on("launch_game_error", (event) => {
+        showErrorSnackbar('Error occurred while launching game...');
+      });
 
       const progressSection = document.getElementById("progress-section");
       var progressElement = document.getElementById("progress-bar");
@@ -375,13 +418,19 @@
 
         ipcRenderer.send("decompress-files");
       });
+      ipcRenderer.on("download-error", (event) => {
+        showErrorSnackbar('Error occurred while downloading game...');
+
+        progressSection.style.visibility = "hidden";
+        downloadButton.innerText = "Download";
+        downloadButton.disabled = false;
+      });
 
       ipcRenderer.on("extracting-progress", (event, progress) => {
         var progressElement = document.getElementById("progress-bar");
         progressElement.style.width = progress.currentProgress + "%";
         progressElement.innerText = progress.currentProgress + "%";
       });
-
       ipcRenderer.on("extracting-finished", (event) => {
         progressSection.style.visibility = "hidden";
         downloadButton.style.visibility = "hidden";
@@ -390,13 +439,33 @@
         downloadButton.innerText = "Download";
         downloadButton.disabled = false;
       });
+      ipcRenderer.on("decompress-error", (event) => {
+        showErrorSnackbar('Error occurred while extracting game...');
+
+        progressSection.style.visibility = "hidden";
+        downloadButton.innerText = "Download";
+        downloadButton.disabled = false;
+      });
     </script>
   </div>
 
+  <div id="error-snackbar"></div>
+
   <div class="bottom-bar">
     <span>Logged in as <b>Foobar</b> <button type="button" class="btn btn-outline-light">Logout</button> <span class="version" id="version"></span></span>
-  </div> 
+  </div>
+
   <script>
+    function showErrorSnackbar(text) {
+      var snackbar = document.getElementById("error-snackbar");
+
+      snackbar.className = "show";
+
+      snackbar.innerText = text;
+
+      setTimeout(function(){ snackbar.className = snackbar.className.replace("show", ""); }, 3000);
+    }
+
     function openTab(evt, tabName) {
       var i, tabContent, tabLinks;
 

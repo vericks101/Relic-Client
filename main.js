@@ -100,6 +100,7 @@ ipcMain.on('launch_game', (event) => {
   child(executablePath, function(err, data) {
     if(err){
        console.error(err);
+       event.sender.send('launch_game_error');
        return;
     }
  
@@ -114,7 +115,12 @@ ipcMain.on('restart_app', () => {
 ipcMain.on("download", (event, info) => {
   info.properties.onProgress = status => mainWindow.webContents.send("download progress", status);
   download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
-      .then(dl => mainWindow.webContents.send("download complete", dl.getSavePath()));
+      .then(dl => mainWindow.webContents.send("download complete", dl.getSavePath()))
+      .catch(err => {
+        console.log(err);
+        event.sender.send('download-error');
+        return;
+      });
 });
 
 ipcMain.on('decompress-files', (event) => {
@@ -125,6 +131,7 @@ ipcMain.on('decompress-files', (event) => {
 
   unzipper.on('error', function (err) {
     console.log('Caught an error', err);
+    event.sender.send('decompress-error');
   });
 
   unzipper.on('extract', function (log) {
@@ -138,12 +145,14 @@ ipcMain.on('decompress-files', (event) => {
             if (err) {
                 console.log("An error ocurred updating the file" + err.message);
                 console.log(err);
+                event.sender.send('decompress-error');
                 return;
             }
             console.log("File succesfully deleted");
         });
     } else {
         console.log("This file doesn't exist, cannot delete");
+        event.sender.send('decompress-error');
     }
 
     event.sender.send('extracting-finished');
