@@ -1,10 +1,13 @@
-ipcRenderer.send('initialize_game_manage_buttons');
+ipcRenderer.send('initialize_game_manage_buttons', {
+    currentTab: currentTab
+});
 
-ipcRenderer.on('initialize_game_manage_buttons', (arg) => {
-    const downloadButton = document.getElementById("download-button");
-    const downloadedManageButtons = document.getElementById("downloaded-manage-buttons");
+ipcRenderer.on('initialize_game_manage_buttons', (event, arg) => {
+    const downloadButton = document.getElementById(`${currentTab}-download-button`);
+    const downloadedManageButtons = document.getElementById(`${currentTab}-downloaded-manage-buttons`);
 
     ipcRenderer.removeAllListeners('initialize_game_manage_buttons');
+
     if (arg.exists) {
         downloadButton.style.visibility = "hidden";
         downloadedManageButtons.style.visibility = "visible";

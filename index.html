@@ -11,9 +11,9 @@
       font-family: "VCR_OSD_MONO_1.001";
       src: url("./assets/fonts/VCR_OSD_MONO_1.001.ttf");
       src:
-      url("./assets/fonts/vcr_osd_mono_1.001-webfont.woff") format("woff"),
-      url("./assets/fonts/vcr_osd_mono_1.001-webfont.eot") format("eot"),
-      url("./assets/fonts/vcr_osd_mono_1.001-webfont.svg") format("svg");
+        url("./assets/fonts/vcr_osd_mono_1.001-webfont.woff") format("woff"),
+        url("./assets/fonts/vcr_osd_mono_1.001-webfont.eot") format("eot"),
+        url("./assets/fonts/vcr_osd_mono_1.001-webfont.svg") format("svg");
     }
 
     body {
@@ -347,15 +347,15 @@
             </p>
         </div>
     </div>
-    <div id="progress-section" class="progress-section">
+    <div id="Unbound-progress-section" class="progress-section">
       <div class="progress">
-        <div id="progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100">0%</div>
+        <div id="Unbound-progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100">0%</div>
       </div>
     </div>
-    <div class="download-manage-buttons">
-        <button id="download-button" style="visibility: hidden;" type="button" onclick="downloadGame()" class="btn btn-outline-light">Download</button>
+    <div id="Unbound-download-manage-buttons" class="download-manage-buttons">
+        <button id="Unbound-download-button" style="visibility: hidden;" type="button" onclick="downloadGame('https://www.googleapis.com/drive/v3/files/1d4JRuWS5d7R5P_RhJ5-axVDcdr_vd8fQ?alt=media&key=AIzaSyDgwFdwLoyaAWIIFCrTdLhEyi5wH3BEXc8', '1d4JRuWS5d7R5P_RhJ5-axVDcdr_vd8fQ.zip')" class="btn btn-outline-light">Download</button>
     </div>
-    <div id="downloaded-manage-buttons" class="downloaded-manage-buttons">
+    <div id="Unbound-downloaded-manage-buttons" class="downloaded-manage-buttons">
       <button id="delete-button" type="button" onclick="deleteGame()" class="btn btn-outline-light">Delete</button>
       <button id="launch-button" type="button" onclick="launchGame()" class="btn btn-outline-light">Launch</button>
     </div>
@@ -377,6 +377,7 @@
       setTimeout(function(){ errorSnackbar.className = errorSnackbar.className.replace("show", ""); }, 3000);
     }
 
+    var currentTab;
     function openTab(evt, tabName) {
       var i, tabContent, tabLinks;
 
@@ -392,6 +393,7 @@
 
       document.getElementById(tabName).style.display = "block";
       evt.currentTarget.className += " active";
+      currentTab = tabName;
     }
 
     document.getElementById("defaultOpen").click();

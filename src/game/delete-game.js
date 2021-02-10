@@ -1,10 +1,12 @@
 function deleteGame() {
-    ipcRenderer.send("delete_game");
+    ipcRenderer.send("delete_game", {
+        currentTab: currentTab
+    });
 }
 
 ipcRenderer.on("game_deleted", (event) => {
-    const downloadButton = document.getElementById("download-button");
-    const downloadedManageButtons = document.getElementById("downloaded-manage-buttons");
+    const downloadButton = document.getElementById(`${currentTab}-download-button`);
+    const downloadedManageButtons = document.getElementById(`${currentTab}-downloaded-manage-buttons`);
 
     downloadedManageButtons.style.visibility = "hidden";
     downloadButton.style.visibility = "visible";

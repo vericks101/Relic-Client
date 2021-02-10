@@ -47,7 +47,6 @@ app.on('activate', function () {
   }
 });
 
-// Register an event listener. When ipcRenderer sends mouse click co-ordinates, show menu at that position.
 ipcMain.on(`display-app-menu`, function(e, args) {
   if (mainWindow) {
     menu.popup({
@@ -62,9 +61,9 @@ ipcMain.on('app_version', (event) => {
   event.sender.send('app_version', { version: app.getVersion() });
 });
 
-ipcMain.on('initialize_game_manage_buttons', (event) => {
+ipcMain.on('initialize_game_manage_buttons', (event, info) => {
   var fs = require('fs');
-  var filepath = `${app.getPath('userData')}\\Unbound`;
+  var filepath = `${app.getPath('userData')}\\${info.currentTab}`;
 
   if (fs.existsSync(filepath)) {
     event.sender.send('initialize_game_manage_buttons', { exists: true });
@@ -73,9 +72,9 @@ ipcMain.on('initialize_game_manage_buttons', (event) => {
   }
 });
 
-ipcMain.on('delete_game', (event) => {
+ipcMain.on('delete_game', (event, info) => {
   var fs = require('fs');
-  var filepath = `${app.getPath('userData')}\\Unbound`;
+  var filepath = `${app.getPath('userData')}\\${info.currentTab}`;
 
   if (fs.existsSync(filepath)) {
       fs.rmdir(filepath, { recursive: true }, (err) => {
@@ -94,9 +93,9 @@ ipcMain.on('delete_game', (event) => {
   }
 });
 
-ipcMain.on('launch_game', (event) => {
+ipcMain.on('launch_game', (event, info) => {
   var child = require('child_process').execFile;
-  var executablePath = `${app.getPath('userData')}\\Unbound\\Unbound.exe`;
+  var executablePath = `${app.getPath('userData')}\\${info.currentTab}\\${info.currentTab}.exe`;
   child(executablePath, function(err, data) {
     if(err){
        console.error(err);
@@ -115,7 +114,7 @@ ipcMain.on('restart_app', () => {
 ipcMain.on("download", (event, info) => {
   info.properties.onProgress = status => mainWindow.webContents.send("download progress", status);
   download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
-      .then(dl => mainWindow.webContents.send("download complete", dl.getSavePath()))
+      .then(dl => mainWindow.webContents.send("download complete", dl.getSavePath(), info.extractingFileName))
       .catch(err => {
         console.log(err);
         event.sender.send('download-error');
@@ -123,9 +122,9 @@ ipcMain.on("download", (event, info) => {
       });
 });
 
-ipcMain.on('decompress-files', (event) => {
+ipcMain.on('decompress-files', (event, info) => {
   var DecompressZip = require('decompress-zip');
-  var ZIP_FILE_PATH = `${app.getPath('userData')}\\1d4JRuWS5d7R5P_RhJ5-axVDcdr_vd8fQ.zip`;
+  var ZIP_FILE_PATH = `${app.getPath('userData')}\\${info.extractingFileName}`;
   var DESTINATION_PATH = `${app.getPath('userData')}`;
   var unzipper = new DecompressZip(ZIP_FILE_PATH);
 
@@ -138,7 +137,7 @@ ipcMain.on('decompress-files', (event) => {
     console.log('Finished extracting', log);
 
     var fs = require('fs');
-    var filepath = `${app.getPath('userData')}\\1d4JRuWS5d7R5P_RhJ5-axVDcdr_vd8fQ.zip`;
+    var filepath = `${app.getPath('userData')}\\${info.extractingFileName}`;
 
     if (fs.existsSync(filepath)) {
         fs.unlink(filepath, (err) => {
