@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <head>
   <title>Ekodex Client</title>
-  <script> 
-    const { remote, ipcRenderer } = require('electron'); 
-    require('dotenv').config();
-  </script>
+  <script src="./environment.js"></script>
+  <script> const { remote, ipcRenderer } = require('electron'); </script>
   <!-- <script src="./pages/unbound.js"></script>
   <script src="./pages/about.js"></script> -->
   <script src="https://kit.fontawesome.com/1c9144b004.js" crossorigin="anonymous"></script>
@@ -356,7 +354,7 @@
       </div>
     </div>
     <div id="Unbound-download-manage-buttons" class="download-manage-buttons">
-        <button id="Unbound-download-button" style="visibility: hidden;" type="button" onclick="downloadGame(process.env.UNBOUND_DOWNLOAD_URL, process.env.UNBOUND_EXTRACT_FILE_NAME)" class="btn btn-outline-light">Download</button>
+        <button id="Unbound-download-button" style="visibility: hidden;" type="button" onclick="downloadGame(UNBOUND_DOWNLOAD_URL, UNBOUND_EXTRACT_FILE_NAME)" class="btn btn-outline-light">Download</button>
     </div>
     <div id="Unbound-downloaded-manage-buttons" class="downloaded-manage-buttons">
       <button id="delete-button" type="button" onclick="deleteGame()" class="btn btn-outline-light">Delete</button>
