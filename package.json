@@ -1,6 +1,6 @@
 {
   "name": "ekodex-client",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "Ekodex Client",
   "main": "main.js",
   "repository": {
