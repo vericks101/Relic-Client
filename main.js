@@ -17,17 +17,24 @@ function createWindow () {
     },
     frame: false
   });
+  
   mainWindow.setResizable(false);
   mainWindow.webContents.openDevTools()
   mainWindow.loadFile('index.html');
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
+
   mainWindow.once('ready-to-show', () => {
     // const log = require('electron-log');
     // log.transports.file.level = 'debug';
     // autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
+  });
+
+  mainWindow.webContents.on('new-window', function(e, url) {
+    e.preventDefault();
+    require('electron').shell.openExternal(url);
   });
 }
 
