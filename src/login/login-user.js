@@ -12,20 +12,27 @@ document.write(`
                 <form class="needs-validation" novalidate>
                     <div class="form-row">
                         <span class="col-md-4 mb-3">
-                            <label style="float: left;" for="validationCustom01">Username</label>
-                            <input type="text" class="form-control" id="validationCustom01" pattern="^[a-zA-Z0-9]+$" placeholder="Username" value="" required>
+                            <label style="float: left;" for="usernameField">Username</label>
+                            <input type="text" class="form-control" id="usernameField" pattern="^[a-zA-Z0-9]+$" placeholder="Username" value="" required>
                             <div style="float: left;" class="invalid-feedback">  
                                 Please provide a valid Username.
                             </div>
                         </span>
                         <br>
                         <span class="col-md-4 mb-3">
-                            <label style="float: left;" for="validationCustom02">Password</label>
-                            <input type="password" class="form-control" id="validationCustom02" pattern="^[a-zA-Z0-9]+$" placeholder="Password" value="" required>
+                            <label style="float: left;" for="passwordField">Password</label>
+                            <input type="password" class="form-control" id="passwordField" pattern="^[a-zA-Z0-9]+$" placeholder="Password" value="" required>
                             <div style="float: left;" class="invalid-feedback">  
                                 Please provide a valid Password.
                             </div>
                         </span>
+                        <div style="float: left; margin-top: 5px;">
+                            <div id="loading-icon" class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <span id="login-response" style="color: #dc3545;"></span>
+                        </div>
+                        <br>
                     </div>
                     <br>
                     <button style="float: left; margin-right: 10px;" class="btn btn-outline-light" type="submit">Login</button>
@@ -35,14 +42,55 @@ document.write(`
                     (function() {
                         'use strict';
                         window.addEventListener('load', function() {
-                            // Fetch all the forms we want to apply custom Bootstrap validation styles to
                             var forms = document.getElementsByClassName('needs-validation');
-                            // Loop over them and prevent submission
+                            var loadingIcon = document.getElementById('loading-icon');
+                            var loginResponse = document.getElementById('login-response');
+                            loadingIcon.hidden = true;
+                            loginResponse.hidden = true;
                             var validation = Array.prototype.filter.call(forms, function(form) {
                                 form.addEventListener('submit', function(event) {
                                     if (form.checkValidity() === false) {
                                         event.preventDefault();
                                         event.stopPropagation();
+                                    } else {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                        
+                                        loadingIcon.hidden = false;
+                                        loginResponse.hidden = true;
+                                        fetch('https://ekodex-server.herokuapp.com/api/user/login', 
+                                        {
+                                            method: 'POST',
+                                            headers: {
+                                                'Accept': 'application/json',
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify({
+                                                username: document.getElementById('usernameField').value, 
+                                                password: document.getElementById('passwordField').value
+                                            })
+                                        }).then(response =>
+                                            response.json().then(data => ({ 
+                                                data: data, 
+                                                status: response.status 
+                                            })
+                                        ).then(response => {
+                                            return response;
+                                        }).then(function(response) {
+                                            if (response.status === 200) {
+                                                console.log("Login was Successful! ");
+                                                loadingIcon.hidden = true;
+                                                var loginModalElement = document.getElementById('login-modal');
+                                                var loginModal = bootstrap.Modal.getInstance(loginModalElement);
+                                                loginModal.hide();
+                                            }
+                                        }).catch(function(error) {
+                                            console.log(error);
+                                            console.log("Login was not Successful.");
+                                            loadingIcon.hidden = true;
+                                            loginResponse.innerText = "Invalid credentials or there was an issue logging in...";
+                                            loginResponse.hidden = false;
+                                        }))
                                     }
                                     form.classList.add('was-validated');
                                 }, false);
