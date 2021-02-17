@@ -1,4 +1,21 @@
+function loginUser() {
+    var loggedInText = document.getElementById('logged-in-text');
+    var loggedInUsername = document.getElementById('logged-in-username');
+    var loginButton = document.getElementById('login-button');
+    var logoutButton = document.getElementById('logout-button');
+    loggedInText.hidden = false;
+    loggedInUsername.innerText = document.getElementById('usernameField').value;
+    loggedInUsername.hidden = false;
+    loginButton.hidden = true;
+    logoutButton.hidden = false;
 
+    var loginModalElement = document.getElementById('login-modal');
+    var loginModal = bootstrap.Modal.getInstance(loginModalElement);
+    loginModal.hide();
+
+    document.getElementById('usernameField').value = '';
+    document.getElementById('passwordField').value = '';
+}
 
 document.write(`
     <div class="modal fade" id="login-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -80,9 +97,7 @@ document.write(`
                                             if (response.status === 200) {
                                                 console.log("Login was Successful! ");
                                                 loadingIcon.hidden = true;
-                                                var loginModalElement = document.getElementById('login-modal');
-                                                var loginModal = bootstrap.Modal.getInstance(loginModalElement);
-                                                loginModal.hide();
+                                                loginUser();
                                             }
                                         }).catch(function(error) {
                                             console.log(error);
