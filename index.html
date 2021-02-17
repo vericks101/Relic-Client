@@ -399,13 +399,12 @@
       }
 
       document.getElementById(tabName).style.display = "block";
+      document.body.style.backgroundImage = `url(./assets/backgrounds/${tabName}.png)`;
       evt.currentTarget.className += " active";
       currentTab = tabName;
     }
 
     document.getElementById("defaultOpen").click();
-
-    document.body.style.backgroundImage = "url(./assets/UnboundBackground.png)";
 
     const version = document.getElementById('version');
     ipcRenderer.send('app_version');
