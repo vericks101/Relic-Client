@@ -81,10 +81,10 @@ ipcMain.on('initialize_game_manage_buttons', (event, info) => {
 
 ipcMain.on('delete_game', (event, info) => {
   var fs = require('fs');
-  var filepath = `${app.getPath('userData')}\\${info.currentTab}`;
+  var existingFolderPath = `${app.getPath('userData')}\\${info.currentTab}`;
 
-  if (fs.existsSync(filepath)) {
-      fs.rmdir(filepath, { recursive: true }, (err) => {
+  if (fs.existsSync(existingFolderPath)) {
+      fs.rmdir(existingFolderPath, { recursive: true }, (err) => {
           if (err) {
               console.log("An error ocurred updating the folder" + err.message);
               console.log(err);
@@ -118,15 +118,89 @@ ipcMain.on('restart_app', () => {
     autoUpdater.quitAndInstall();
 });
 
-ipcMain.on("download", (event, info) => {
-  info.properties.onProgress = status => mainWindow.webContents.send("download progress", status);
+ipcMain.on("download-game", (event, info) => {
+  var fs = require('fs');
+  var existingFolderPath = `${app.getPath('userData')}\\${info.currentTab}`;
+  if (fs.existsSync(existingFolderPath)) {
+    fs.rmdir(existingFolderPath, { recursive: true }, (err) => {
+      if (err) {
+          console.log("An error ocurred updating the folder" + err.message);
+          console.log(err);
+          event.sender.send('game_deleted_error');
+          return;
+      }
+      console.log("Folder succesfully deleted");
+    });
+  }
+
+  info.properties.onProgress = status => mainWindow.webContents.send("download-game-progress", status);
   download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
-      .then(dl => mainWindow.webContents.send("download complete", dl.getSavePath(), info.extractingFileName))
+      .then(dl => mainWindow.webContents.send("download-game-complete", dl.getSavePath(), info.extractingFileName))
       .catch(err => {
         console.log(err);
-        event.sender.send('download-error');
+        event.sender.send('download-game-error');
         return;
       });
+});
+
+ipcMain.on("download-game-version", (event, info) => {
+  info.properties.onProgress = status => mainWindow.webContents.send("download-game-version-progress", status);
+  download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
+      .then(dl => mainWindow.webContents.send("download-game-version-complete", dl.getSavePath()))
+      .catch(err => {
+        console.log(err);
+        event.sender.send('download-game-version-error');
+        return;
+      });
+});
+
+ipcMain.on("check-for-game-updates", (event, info) => {
+  info.properties.onProgress = status => mainWindow.webContents.send("check-for-game-updates-progress", status);
+  download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
+      .then(dl => mainWindow.webContents.send("check-for-game-updates-complete", dl.getSavePath()))
+      .catch(err => {
+        console.log(err);
+        event.sender.send('check-for-game-updates-error');
+        return;
+      });
+});
+
+ipcMain.on('compare-game-versions', (event, info) => {
+  var fs = require('fs');
+  var existingVersionFilePath = `${app.getPath('userData')}\\${info.currentTab}\\${info.versionFileName}`;
+  var newestVersionFilePath = `${app.getPath('userData')}\\${info.versionFileName}`;
+  fs.readFile(existingVersionFilePath, 'utf-8', (err, existingVersion) => {
+    if(err){
+      console.log(err);
+      event.sender.send('compare-game-versions-error');
+      return;
+    }
+
+    fs.readFile(newestVersionFilePath, 'utf-8', (err, newestVersion) => {
+      if(err){
+        console.log(err);
+        event.sender.send('compare-game-versions-error');
+        return;
+      }
+
+      if (fs.existsSync(newestVersionFilePath)) {
+          fs.unlink(newestVersionFilePath, (err) => {
+              if (err) {
+                  console.log("An error ocurred updating the file" + err.message);
+                  console.log(err);
+                  event.sender.send('compare-game-versions-error');
+                  return;
+              }
+              console.log("File succesfully deleted");
+          });
+      } else {
+          console.log("This file doesn't exist, cannot delete");
+          event.sender.send('compare-game-versions-error');
+      }
+
+      event.sender.send('compare-game-versions-complete', { updateNeeded: existingVersion !== newestVersion });
+    });
+  });
 });
 
 ipcMain.on('decompress-files', (event, info) => {
@@ -145,7 +219,6 @@ ipcMain.on('decompress-files', (event, info) => {
 
     var fs = require('fs');
     var filepath = `${app.getPath('userData')}\\${info.extractingFileName}`;
-
     if (fs.existsSync(filepath)) {
         fs.unlink(filepath, (err) => {
             if (err) {

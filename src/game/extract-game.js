@@ -6,17 +6,11 @@ ipcRenderer.on("extracting-progress", (event, progress) => {
 });
 
 ipcRenderer.on("extracting-finished", (event) => {
-    const downloadButton = document.getElementById(`${currentTab}-download-button`);
-    const progressSection = document.getElementById(`${currentTab}-progress-section`);
     const progressElement = document.getElementById(`${currentTab}-progress-bar`);
-    const downloadedManageButtons = document.getElementById(`${currentTab}-downloaded-manage-buttons`);
 
-    progressSection.style.visibility = "hidden";
-    downloadButton.style.visibility = "hidden";
     progressElement.style.width = "0%";
-    downloadedManageButtons.style.visibility = "visible";
-    downloadButton.innerText = "Download";
-    downloadButton.disabled = false;
+
+    downloadGameVersion(UNBOUND_VERSION_URL);
 });
 
 ipcRenderer.on("extracting-error", (event) => {

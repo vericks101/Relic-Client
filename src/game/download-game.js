@@ -1,19 +1,22 @@
 function downloadGame(downloadUrl, extractingFileName) {
     const progressSection = document.getElementById(`${currentTab}-progress-section`);
+    const progressElement = document.getElementById(`${currentTab}-progress-bar`);
     const downloadButton = document.getElementById(`${currentTab}-download-button`);
 
+    progressElement.style.width = "0%";
     progressSection.style.visibility = "visible";
-    downloadButton.innerText = "Downloading...";
+    downloadButton.innerText = "Downloading Game...";
     downloadButton.disabled = true;
 
-    ipcRenderer.send("download", {
+    ipcRenderer.send("download-game", {
+        currentTab: currentTab,
         url: downloadUrl,
         extractingFileName: extractingFileName,
         properties: {directory: `${remote.app.getPath('userData')}`}
     });
 }
 
-ipcRenderer.on("download progress", (event, progress) => {
+ipcRenderer.on("download-game-progress", (event, progress) => {
     const progressElement = document.getElementById(`${currentTab}-progress-bar`);
     const cleanProgressInPercentages = Math.floor(progress.percent * 100);
 
@@ -21,11 +24,11 @@ ipcRenderer.on("download progress", (event, progress) => {
     progressElement.innerText = cleanProgressInPercentages + "%";
 });
 
-ipcRenderer.on("download complete", (event, file, extractingFileName) => {
+ipcRenderer.on("download-game-complete", (event, file, extractingFileName) => {
     const progressElement = document.getElementById(`${currentTab}-progress-bar`);
     const downloadButton = document.getElementById(`${currentTab}-download-button`);
 
-    downloadButton.innerText = "Extracting...";
+    downloadButton.innerText = "Extracting Game...";
     progressElement.style.width = "0%";
 
     ipcRenderer.send("decompress-files", {
@@ -33,7 +36,7 @@ ipcRenderer.on("download complete", (event, file, extractingFileName) => {
     });
 });
 
-ipcRenderer.on("download-error", (event) => {
+ipcRenderer.on("download-game-error", (event) => {
     const progressSection = document.getElementById(`${currentTab}-progress-section`);
     const downloadButton = document.getElementById(`${currentTab}-download-button`);
 

@@ -400,6 +400,10 @@
       document.body.style.backgroundImage = `url(./assets/backgrounds/${tabName}.png)`;
       evt.currentTarget.className += " active";
       currentTab = tabName;
+
+      ipcRenderer.send('initialize_game_manage_buttons', {
+          currentTab: currentTab
+      });
     }
 
     document.getElementById("defaultOpen").click();
@@ -444,6 +448,8 @@
 
   <script src="./src/initialize_game_manage_buttons/initialize-game-manage-buttons.js"></script>
 
+  <script src="./src/game/download-game-version.js"></script>
+  <script src="./src/game/update-game.js"></script>
   <script src="./src/game/download-game.js"></script>
   <script src="./src/game/extract-game.js"></script>
   <script src="./src/game/launch-game.js"></script>
