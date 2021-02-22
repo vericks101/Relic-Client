@@ -22,15 +22,16 @@
       font-family: "VCR_OSD_MONO_1.001";
     }
 
-    #notification {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        width: 200px;
-        padding: 20px;
-        border-radius: 5px;
-        background-color: white;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    #update-notification {
+      position: fixed;
+      bottom: 36px;
+      left: 11px;
+      width: 300px;
+      padding: 20px;
+      border-radius: 5px;
+      background-color: #1b1b1be3;
+      color: white;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     }
 
     .hidden {
@@ -360,6 +361,12 @@
     </div>
   </div>
 
+  <div id="update-notification" class="hidden">
+    <p id="message"></p>
+    <button id="close-button" type="button" class="btn btn-outline-light" onClick="closeUpdateNotification()">Close</button>
+    <button id="restart-button" type="button" class="btn btn-outline-light" onClick="restartApp()" class="hidden">Restart</button>
+  </div>
+
   <div id="error-snackbar"></div>
 
   <div class="bottom-bar">
@@ -415,11 +422,11 @@
       version.innerText = 'Version ' + arg.version;
     });
 
-    const notification = document.getElementById('notification');
+    const updateNotification = document.getElementById('update-notification');
     const message = document.getElementById('message');
 
-    function closeNotification() {
-        notification.classList.add('hidden');
+    function closeUpdateNotification() {
+      updateNotification.classList.add('hidden');
     }
     function restartApp() {
         ipcRenderer.send('restart_app');
