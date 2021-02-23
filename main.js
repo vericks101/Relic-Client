@@ -6,6 +6,7 @@ const { download } = require("electron-dl");
 
 let mainWindow;
 
+// Creates main application window.
 function createWindow () {
   mainWindow = new BrowserWindow({
     width: 1200,
@@ -18,42 +19,51 @@ function createWindow () {
     frame: false
   });
   
+  // Enable for browser development tools.
+  // mainWindow.webContents.openDevTools();
+
   mainWindow.setResizable(false);
-  mainWindow.webContents.openDevTools()
   mainWindow.loadFile('index.html');
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
 
+  // Once the main application window has loaded, check for client updates.
   mainWindow.once('ready-to-show', () => {
+    // Enable for auto update logs for debugging.
     // const log = require('electron-log');
     // log.transports.file.level = 'debug';
     // autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
   });
 
+  // When a new window event is fired, open it in a browser tab instead of within the application.
   mainWindow.webContents.on('new-window', function(e, url) {
     e.preventDefault();
     require('electron').shell.openExternal(url);
   });
 }
 
+// When the application starts, create a main window.
 app.on('ready', () => {
   createWindow();
 });
 
+// Quit the application when the main window is closed.
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
 
+// Create the main window when the application is activated.
 app.on('activate', function () {
   if (mainWindow === null) {
     createWindow();
   }
 });
 
+// Create and display the custom main window menu options.
 ipcMain.on(`display-app-menu`, function(e, args) {
   if (mainWindow) {
     menu.popup({
@@ -64,10 +74,13 @@ ipcMain.on(`display-app-menu`, function(e, args) {
   }
 });
 
+// Gets the current app version and sends it off to the current renderer process.
 ipcMain.on('app_version', (event) => {
   event.sender.send('app_version', { version: app.getVersion() });
 });
 
+// Checks the file system for the current tab's game on whether it's installed or not
+// and returns the status back to the initialize game manage buttons logic.
 ipcMain.on('initialize_game_manage_buttons', (event, info) => {
   var fs = require('fs');
   var filepath = `${app.getPath('userData')}\\${info.currentTab}`;
@@ -79,6 +92,7 @@ ipcMain.on('initialize_game_manage_buttons', (event, info) => {
   }
 });
 
+// Checks file system for current tab's installed game and deletes its contents.
 ipcMain.on('delete_game', (event, info) => {
   var fs = require('fs');
   var existingFolderPath = `${app.getPath('userData')}\\${info.currentTab}`;
@@ -100,6 +114,7 @@ ipcMain.on('delete_game', (event, info) => {
   }
 });
 
+// Attempts to open the current tab's game.
 ipcMain.on('launch_game', (event, info) => {
   var child = require('child_process').execFile;
   var executablePath = `${app.getPath('userData')}\\${info.currentTab}\\${info.currentTab}.exe`;
@@ -114,10 +129,7 @@ ipcMain.on('launch_game', (event, info) => {
   });
 });
 
-ipcMain.on('restart_app', () => {
-    autoUpdater.quitAndInstall();
-});
-
+// Takes in the current tab and attempts to download the game to the file system.
 ipcMain.on("download-game", (event, info) => {
   var fs = require('fs');
   var existingFolderPath = `${app.getPath('userData')}\\${info.currentTab}`;
@@ -143,6 +155,7 @@ ipcMain.on("download-game", (event, info) => {
       });
 });
 
+// Takes in the current tab's downloaded game and downloads the current version file.
 ipcMain.on("download-game-version", (event, info) => {
   info.properties.onProgress = status => mainWindow.webContents.send("download-game-version-progress", status);
   download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
@@ -154,6 +167,7 @@ ipcMain.on("download-game-version", (event, info) => {
       });
 });
 
+// For the current tab, downloads the most recent game version file to compare against.
 ipcMain.on("check-for-game-updates", (event, info) => {
   info.properties.onProgress = status => mainWindow.webContents.send("check-for-game-updates-progress", status);
   download(BrowserWindow.getFocusedWindow(), info.url, info.properties)
@@ -165,6 +179,9 @@ ipcMain.on("check-for-game-updates", (event, info) => {
       });
 });
 
+// For the current tab, takes in the current game version file and compares it against the
+// most recent game version file. If they aren't the same, call for the newest game version
+// to be downloaded and installed.
 ipcMain.on('compare-game-versions', (event, info) => {
   var fs = require('fs');
   var existingVersionFilePath = `${app.getPath('userData')}\\${info.currentTab}\\${info.versionFileName}`;
@@ -203,6 +220,7 @@ ipcMain.on('compare-game-versions', (event, info) => {
   });
 });
 
+// For the current tab, takes in the downloaded game and attempts to decompress the files.
 ipcMain.on('decompress-files', (event, info) => {
   var DecompressZip = require('decompress-zip');
   var ZIP_FILE_PATH = `${app.getPath('userData')}\\${info.extractingFileName}`;
@@ -248,14 +266,18 @@ ipcMain.on('decompress-files', (event, info) => {
   });
 });
 
+// If there is a client update available and the user decides to restart the app,
+// call the auto updater to quit and install the new client update.
 ipcMain.on('restart_app', () => {
-    autoUpdater.quitAndInstall();
+  autoUpdater.quitAndInstall();
 });
 
+// If there is a client update available, send to the renderer process to prompt the user.
 autoUpdater.on('update-available', () => {
     mainWindow.webContents.send('update_available');
 });
 
+// If a client update has been downloaded, prompt the user to see if a restart is wanted or not.
 autoUpdater.on('update-downloaded', () => {
     mainWindow.webContents.send('update_downloaded');
 });

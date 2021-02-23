@@ -1,3 +1,5 @@
+// Sends of a request to the main process to download the current tab's
+// game and displays as such via the UI.
 function downloadGame(downloadUrl, extractingFileName) {
     const progressSection = document.getElementById(`${currentTab}-progress-section`);
     const progressElement = document.getElementById(`${currentTab}-progress-bar`);
@@ -16,6 +18,7 @@ function downloadGame(downloadUrl, extractingFileName) {
     });
 }
 
+// Updates game download progress UI as the download is progressing.
 ipcRenderer.on("download-game-progress", (event, progress) => {
     const progressElement = document.getElementById(`${currentTab}-progress-bar`);
     const cleanProgressInPercentages = Math.floor(progress.percent * 100);
@@ -24,6 +27,7 @@ ipcRenderer.on("download-game-progress", (event, progress) => {
     progressElement.innerText = cleanProgressInPercentages + "%";
 });
 
+// Updates game download UI as the download completes.
 ipcRenderer.on("download-game-complete", (event, file, extractingFileName) => {
     const progressElement = document.getElementById(`${currentTab}-progress-bar`);
     const downloadButton = document.getElementById(`${currentTab}-download-button`);
@@ -36,6 +40,8 @@ ipcRenderer.on("download-game-complete", (event, file, extractingFileName) => {
     });
 });
 
+// If there is an error while downloading the current tab's game, display
+// as so via the error snackbar.
 ipcRenderer.on("download-game-error", (event) => {
     const progressSection = document.getElementById(`${currentTab}-progress-section`);
     const downloadButton = document.getElementById(`${currentTab}-download-button`);

@@ -1,4 +1,3 @@
-// preload.js
 const { remote } = require("electron");
 const {
   getCurrentWindow,

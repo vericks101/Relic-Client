@@ -380,6 +380,8 @@
   </div>
 
   <script>
+    // Given text to display, display the error snackbar at the bottem of the screen
+    // for 3000 ms.
     function showErrorSnackbar(text) {
       var errorSnackbar = document.getElementById("error-snackbar");
 
@@ -389,6 +391,8 @@
       setTimeout(function(){ errorSnackbar.className = errorSnackbar.className.replace("show", ""); }, 3000);
     }
 
+    // Keeps track of the current tab opened and when an attempt to open a new tab is made,
+    // hides the current tab's content and makes the new tab visible.
     var currentTab;
     function openTab(evt, tabName) {
       var i, tabContent, tabLinks;
@@ -413,8 +417,10 @@
       });
     }
 
+    // Finds the tab tagged as default and opens it when the application starts.
     document.getElementById("defaultOpen").click();
 
+    // Asks the main process for the current application version and displays it on screen.
     const version = document.getElementById('version');
     ipcRenderer.send('app_version');
     ipcRenderer.on('app_version', (event, arg) => {
@@ -422,9 +428,10 @@
       version.innerText = 'Version ' + arg.version;
     });
 
+    // When there is a client update available, these functions are used to control
+    // whether the client is restarted or not.
     const updateNotification = document.getElementById('update-notification');
     const message = document.getElementById('message');
-
     function closeUpdateNotification() {
       updateNotification.classList.add('hidden');
     }
@@ -432,6 +439,7 @@
         ipcRenderer.send('restart_app');
     }
 
+    // When loading the application, hook up the menu buttons to appropriate event listeners.
     window.addEventListener("DOMContentLoaded", () => {
       const menuButton = document.getElementById("menu-btn");
       const minimizeButton = document.getElementById("minimize-btn");

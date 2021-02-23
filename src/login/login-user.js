@@ -1,3 +1,5 @@
+// Updates the login modal and application UI based on the attempt to
+// login the user.
 function loginUser() {
     var loggedInText = document.getElementById('logged-in-text');
     var loggedInUsername = document.getElementById('logged-in-username');

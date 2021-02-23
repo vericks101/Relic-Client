@@ -1,3 +1,4 @@
+// Updates current extraction UI as the game files are being extracted.
 ipcRenderer.on("extracting-progress", (event, progress) => {
     const progressElement = document.getElementById(`${currentTab}-progress-bar`);
 
@@ -5,6 +6,7 @@ ipcRenderer.on("extracting-progress", (event, progress) => {
     progressElement.innerText = progress.currentProgress + "%";
 });
 
+// Updates current extraction UI as the game files finish being extracted.
 ipcRenderer.on("extracting-finished", (event) => {
     const progressElement = document.getElementById(`${currentTab}-progress-bar`);
 
@@ -13,6 +15,8 @@ ipcRenderer.on("extracting-finished", (event) => {
     downloadGameVersion(UNBOUND_VERSION_URL);
 });
 
+// Displays an error via the error snackbar if there is an issue extracting the
+// current tab's game files.
 ipcRenderer.on("extracting-error", (event) => {
     const downloadButton = document.getElementById(`${currentTab}-download-button`);
     const progressSection = document.getElementById(`${currentTab}-progress-section`);

@@ -1,3 +1,5 @@
+// Sends of a request to the main process to download the current tab's
+// game version and displays as such via the UI.
 function downloadGameVersion(downloadVersionUrl) {
     const downloadButton = document.getElementById(`${currentTab}-download-button`);
 
@@ -9,6 +11,7 @@ function downloadGameVersion(downloadVersionUrl) {
     });
 }
 
+// Updates game version download progress UI as the download is progressing.
 ipcRenderer.on("download-game-version-progress", (event, progress) => {
     const progressElement = document.getElementById(`${currentTab}-progress-bar`);
     const cleanProgressInPercentages = Math.floor(progress.percent * 100);
@@ -17,6 +20,7 @@ ipcRenderer.on("download-game-version-progress", (event, progress) => {
     progressElement.innerText = cleanProgressInPercentages + "%";
 });
 
+// Updates game version download UI as the download completes.
 ipcRenderer.on("download-game-version-complete", (event) => {
     const downloadButton = document.getElementById(`${currentTab}-download-button`);
     const progressSection = document.getElementById(`${currentTab}-progress-section`);
@@ -31,6 +35,8 @@ ipcRenderer.on("download-game-version-complete", (event) => {
     downloadButton.disabled = false;
 });
 
+// If there is an error while downloading the current tab's game version, display
+// as so via the error snackbar.
 ipcRenderer.on("download-game-version-error", (event) => {
     const progressSection = document.getElementById(`${currentTab}-progress-section`);
     const downloadButton = document.getElementById(`${currentTab}-download-button`);

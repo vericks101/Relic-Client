@@ -1,3 +1,4 @@
+// Updates the application UI if the user attempts to logout.
 function logoutUser() {
     var loggedInText = document.getElementById('logged-in-text');
     var loggedInUsername = document.getElementById('logged-in-username');

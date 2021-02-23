@@ -1,3 +1,5 @@
+// Sends off a request to the main process to check if the current tab's
+// installed game has an update available and download if so.
 function checkForGameUpdates() {
     const progressSection = document.getElementById(`${currentTab}-progress-section`);
     const progressElement = document.getElementById(`${currentTab}-progress-bar`);
@@ -22,6 +24,7 @@ function checkForGameUpdates() {
     });
 }
 
+// Update the check for updates UI while the check is being made.
 ipcRenderer.on("check-for-game-updates-progress", (event, progress) => {
     const progressElement = document.getElementById(`${currentTab}-progress-bar`);
     const cleanProgressInPercentages = Math.floor(progress.percent * 100);
@@ -30,6 +33,7 @@ ipcRenderer.on("check-for-game-updates-progress", (event, progress) => {
     progressElement.innerText = cleanProgressInPercentages + "%";
 });
 
+// Update the check for updates UI once the check is finished.
 ipcRenderer.on("check-for-game-updates-complete", (event) => {
     var versionFileName;
     switch(currentTab) {
@@ -44,6 +48,7 @@ ipcRenderer.on("check-for-game-updates-complete", (event) => {
     });
 });
 
+// Update the compare game versions UI once the comparison is complete.
 ipcRenderer.on("compare-game-versions-complete", (event, args) => {
     if (args.updateNeeded) {
         downloadGame(UNBOUND_DOWNLOAD_URL, UNBOUND_EXTRACT_FILE_NAME);
@@ -62,6 +67,8 @@ ipcRenderer.on("compare-game-versions-complete", (event, args) => {
     }
 });
 
+// If there is an issue checking for a new game version, display as so
+// via the error snackbar.
 ipcRenderer.on("check-for-game-updates-error", (event) => {
     const progressSection = document.getElementById(`${currentTab}-progress-section`);
     const downloadButton = document.getElementById(`${currentTab}-download-button`);
@@ -73,6 +80,8 @@ ipcRenderer.on("check-for-game-updates-error", (event) => {
     downloadButton.disabled = false;
 });
 
+// If there is an issue comparing for a new game version, display as so
+// via the error snackbar.
 ipcRenderer.on("compare-game-versions-error", (event) => {
     const progressSection = document.getElementById(`${currentTab}-progress-section`);
     const downloadButton = document.getElementById(`${currentTab}-download-button`);
