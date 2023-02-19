@@ -77,7 +77,7 @@ document.write(`
                                         
                                         loadingIcon.hidden = false;
                                         loginResponse.hidden = true;
-                                        fetch('https://ekodex-server.herokuapp.com/api/user/login', 
+                                        fetch('https://relic-server.herokuapp.com/api/user/login', 
                                         {
                                             method: 'POST',
                                             headers: {
@@ -117,8 +117,8 @@ document.write(`
                 </script>
                 </div>
                 <div class="modal-footer">
-                    <p>Don't have an Ekodex Account?</p>
-                    <a class="btn btn-outline-light" href="https://ekodex.netlify.app/" target="_blank" rel="noopener noreferrer" role="button">Create a New Account...</a>
+                    <p>Don't have an relic Account?</p>
+                    <a class="btn btn-outline-light" href="https://relic.netlify.app/" target="_blank" rel="noopener noreferrer" role="button">Create a New Account...</a>
                 </div>
             </div>
         </div>

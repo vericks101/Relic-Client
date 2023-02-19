@@ -1,16 +1,16 @@
-# Ekodex-Client
-A repository to represent the client for Ekodex, a single platform for game projects that I've created and are applicable to a single gaming platform model.
+# Relic-Client
+A repository to represent the client for Relic, a single platform for game projects that I've created and are applicable to a single gaming platform model.
 
-Check out the front-end website repository here: https://github.com/vericks101/Ekodex-Web
+Check out the front-end website repository here: https://github.com/vericks101/Relic-Web
 
-Check out the back-end server repository here: https://github.com/vericks101/Ekodex-RESTAPI
+Check out the back-end server repository here: https://github.com/vericks101/Relic-RESTAPI
 
 ## Local Setup and Configuration
 Ensure `node_modules` is available else the application will fail to run. If needed, run `npm install` to pull the needed dependencies.
 
 You will also need to provide a `electron-builder.yml` file with the following configuration parameters provided:
 ```
-appId: com.client.EkodexClient
+appId: com.client.RelicClient
 publish:
   provider: github
   token: [GITHUB_ACCESS_TOKEN]
