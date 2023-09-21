@@ -1,5 +1,5 @@
 # Relic-Client
-A repository to represent the client for Relic, a single platform for game projects that I've created and are applicable to a single gaming platform model.
+A repository to represent the client for Relic, a platform for game projects that I've created.
 
 Check out the front-end website repository here: https://github.com/vericks101/Relic-Web
 
